@@ -9,24 +9,25 @@
 extern TS3Functions ts3Functions;
 UINT_PTR loop_id;
 
-void setMuteState(bool state){
+void setMuteState(int state){
 	uint64* result;
-    if(ts3Functions.getServerConnectionHandlerList(&result)==ERROR_ok){
-        uint64* server;
-        for(server = result; *server != (uint64)NULL; ++server){
-            if(ts3Functions.setClientSelfVariableAsInt(*server,CLIENT_INPUT_MUTED,(state==1?MUTEINPUT_MUTED:MUTEINPUT_NONE))==ERROR_ok){
-                ts3Functions.flushClientSelfUpdates(*server, NULL);
-            }
-        }
-        ts3Functions.freeMemory(result);
-    }
+	if(ts3Functions.getServerConnectionHandlerList(&result) != ERROR_ok){
+		return;
+	}
+	uint64* server;
+	for(server = result; *server != (uint64)NULL; ++server){
+		if(ts3Functions.setClientSelfVariableAsInt(*server,CLIENT_INPUT_MUTED, state) == ERROR_ok){
+			ts3Functions.flushClientSelfUpdates(*server, NULL);
+		}
+	}
+	ts3Functions.freeMemory(result);
 }
 
 void loop(HWND__*, unsigned int, long long unsigned int, long unsigned int){
 	if(GetKeyState(VK_SCROLL)){
-		setMuteState(true);
+		setMuteState(MUTEINPUT_MUTED);
 	}else{
-		setMuteState(false);
+		setMuteState(MUTEINPUT_NONE);
 	}
 }
 

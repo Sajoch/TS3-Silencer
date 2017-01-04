@@ -2,7 +2,7 @@
 #include "export.h"
 #include "main.h"
 
-struct TS3Functions ts3Functions;
+TS3Functions ts3Functions;
 
 extern "C" {
 
